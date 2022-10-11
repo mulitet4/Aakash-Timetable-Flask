@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}">
+    <title>Aakash Timetable</title>
+</head>
+<body>
+    <form action="http://0.0.0.0:8000" method="post">
+        <div class="text-xs text-clip sm:text-sm">
+        {% for class_name in class_names %}
+            <div class="{{class_name}} border-2 rounded-lg border-green-600 p-4 m-4 ">
+                {{class_name}}
+
+                <table class="table-auto m-2">
+                    <thead>
+                        <tr>
+                            <th class="text-left">Period</th>
+                            {% for day in days %}
+                                <th class="pr-4 text-left">{{day}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <th class="text-left">Period 1</th>
+                        {% for day in days %}
+                            <th>
+                                <select name="{{class_name}}-{{day}}-Period-1" >
+                                    {% for teacher in teacher_codes %}
+                                        <option class="text-left" value="{{teacher}}">{{teacher}}</option>
+                                    {% endfor %}
+                                </select>
+                            </th>
+                        {% endfor %}
+                    </tr>
+
+                    <tr>
+                        <th class="text-left">Period 2</th>
+                        {% for day in days%}
+                            <th>
+                                <select name="{{class_name}}-{{day}}-Period-2">
+                                {% for teacher in teacher_codes %}
+                                    <option class="text-left" value="{{teacher}}">{{teacher}}</option>
+                                {% endfor %}
+                                </select>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        {% endfor %}
+        </div>
+
+        <div class="ml-4">Start Date: <input type="datetime-local" class="ml-4 mb-4 p-2" name="date-start" id="date-start"> </div>
+        <div class="ml-4">End Date: <input type="datetime-local" class="ml-4 mb-4 p-2" name="date-end" id="date-end"> </div>
+        
+        <button type="submit" class="ml-4 mb-4 p-2 border-2 rounded-lg border-green-600 hover:bg-green-600 transition-all">
+            Download
+        </button>
+    </form>
+</body>
+</html>
