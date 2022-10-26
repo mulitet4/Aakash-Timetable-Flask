@@ -24,34 +24,24 @@
                         </tr>
                     </thead>
 
+                    {% for i in range(1, 3)%}
+
                     <tbody>
                     <tr>
-                        <th class="text-left">Period 1</th>
+                        <th class="text-left">Period {{i}}</th>
                         {% for day in days %}
                             <th>
-                                <select name="{{class_name}}-{{day}}-Period-1" >
-                                    {% for teacher in teacher_codes %}
-                                        <option class="text-left" value="{{teacher}}">{{teacher}}</option>
+                                <select name="{{class_name}}-{{day}}-Period-{{i}}" >
+                                    {% for period in period_codes %}
+                                        <option class="text-left" value="{{period}}">{{period}}</option>
                                     {% endfor %}
                                 </select>
                             </th>
                         {% endfor %}
                     </tr>
 
-                    <tr>
-                        <th class="text-left">Period 2</th>
-                        {% for day in days%}
-                            <th>
-                                <select name="{{class_name}}-{{day}}-Period-2">
-                                {% for teacher in teacher_codes %}
-                                    <option class="text-left" value="{{teacher}}">{{teacher}}</option>
-                                {% endfor %}
-                                </select>
-                            </th>
-                        {% endfor %}
-                    </tr>
-                    </tbody>
-
+                    {% endfor %}
+                    
                 </table>
             </div>
         {% endfor %}
@@ -59,10 +49,33 @@
 
         <div class="ml-4">Start Date: <input type="datetime-local" class="ml-4 mb-4 p-2" name="date-start" id="date-start"> </div>
         <div class="ml-4">End Date: <input type="datetime-local" class="ml-4 mb-4 p-2" name="date-end" id="date-end"> </div>
-        
+
         <button type="submit" class="ml-4 mb-4 p-2 border-2 rounded-lg border-green-600 hover:bg-green-600 transition-all">
             Download
         </button>
     </form>
+
+    <div class="m-4">
+        <p class="explanation">
+            Enter all the extra periods to be added to the timetable, seperated by commas <br>
+            like this: <code>Term 1, Diwali, Term 2</code>
+        </p>
+        <input type="text" class="extra-codes w-1/3 border-2 rounded-lg border-green-600 p-2 mb-4 mt-4" > <br>
+        <button class="add-codes-button mb-4 p-2 border-2 rounded-lg border-green-600 hover:bg-green-600 transition-all">Add Codes</button>
+    </div>
+
+    <div class="credits m-4">
+        Made by <a href="https://github.com/mulitate4" target="_blank" class="text-green-600 underline">Aryan Dongre</a>
+    </div>
+
+    <script src="{{url_for('static',filename='js/misc_functions.js')}}" type="module"></script>
+    <script type="module">
+        import {AEL, $, redirect, log} from "{{url_for('static',filename='js/misc_functions.js')}}";
+
+        AEL($('.add-codes-button'), 'click', () => {
+            let extra_codes = $(".extra-codes").value
+            redirect('?extra_codes=' + extra_codes)
+        })
+    </script>
 </body>
 </html>

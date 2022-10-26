@@ -15,11 +15,11 @@ batch_names: list = [
     'ER-01', 'ER-02', 'HER-01', 'FS-03', 'FS-07',
     'EW-01'
 ]
-teacher_codes = [
+period_codes = [
     'P1', 'P2', 'P3', 'P4', 'P5', 
     'C1', 'C2', 'C3', 'C4', 'C5',
     'M1', 'M2', 'M3', 'M4', 'M5'
-    ,'N', 'H'
+    ,'N', 'H', 
 ]
 day_map = {
     "Monday": "EF",
@@ -56,10 +56,14 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def timetable():
     if request.method == 'GET':
+        extra_codes = request.args.get('extra_codes')
+        if extra_codes:
+            extra_codes = extra_codes.split(',')
+            extra_codes = [code.strip() for code in extra_codes]
         return render_template(
             'app.html', 
             class_names = batch_names,
-            teacher_codes = teacher_codes,
+            period_codes = period_codes + extra_codes if extra_codes else period_codes,
             days = days
         )
         
@@ -68,7 +72,17 @@ def timetable():
         
         return send_file(path, as_attachment=True, download_name=name)
 
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    if request.method == 'GET':
+        extra = request.args.get('extra_period_codes')
+        print(extra.split(','))
+        return "hello"
 
+
+# ------
+# Helper
+# ------
 def prepare_workbook(form_data):
     date_start = datetime.fromisoformat(form_data.get('date-start')).strftime('%d.%m.%Y')
     date_end = datetime.fromisoformat(form_data.get('date-end')).strftime('%d.%m.%Y')
