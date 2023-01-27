@@ -1,6 +1,7 @@
 # -------
 # Imports
 # -------
+import os
 import subprocess
 from datetime import datetime
 from flask import Flask, render_template, abort, request, send_file
@@ -37,7 +38,9 @@ days = list(day_map.keys())
 # --------------
 batch_map = {}
 
-timetable_wb = load_workbook('./static/src/timetable-aakash.xlsx')
+my_dir = os.path.dirname(os.path.realpath(__file__))
+workbook_path = os.path.join(my_dir, 'static/src/timetable-aakash.xlsx')
+timetable_wb = load_workbook(workbook_path)
 timetable_ws = timetable_wb.active
 
 for batch in batch_names:
@@ -87,7 +90,7 @@ def prepare_workbook(form_data):
     date_start = datetime.fromisoformat(form_data.get('date-start')).strftime('%d.%m.%Y')
     date_end = datetime.fromisoformat(form_data.get('date-end')).strftime('%d.%m.%Y')
     
-    timetable_wb_src = load_workbook('./static/src/timetable-aakash.xlsx')
+    timetable_wb_src = load_workbook(workbook_path)
     timetable_ws = timetable_wb_src.active
     
     for batch in batch_names:
@@ -113,6 +116,7 @@ def prepare_workbook(form_data):
             timetable_ws[str(partial_cell_letter_2)+str(partial_cell_number)] = teacher_period_2
     
     path = f"./static/src/timetable-{date_start}-{date_end}.xlsx"
+    path = os.path.join(my_dir, path)
     name = f'timetable-{date_start}-{date_end}.xlsx'
     timetable_wb_src.save(path)
     return path, name
